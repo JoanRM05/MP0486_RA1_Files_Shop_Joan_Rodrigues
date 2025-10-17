@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import dao.DaoImplFile;
+
 public class Shop {
 	private Amount cash = new Amount(100.00);
 //	private Product[] inventory;
@@ -25,7 +27,8 @@ public class Shop {
 //	private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
-
+	private DaoImplFile dao = new DaoImplFile();
+	
 	final static double TAX_RATE = 1.04;
 
 	public Shop() {
@@ -103,7 +106,7 @@ public class Shop {
 		
 		// init session as employee
 		shop.initSession();
-
+		
 		Scanner scanner = new Scanner(System.in);
 		int opcion = 0;
 		boolean exit = false;
@@ -201,6 +204,7 @@ public class Shop {
 	 * load initial inventory to shop
 	 */
 	public void loadInventory() {
+		
 //		addProduct(new Product("Manzana", new Amount(10.00), true, 10));
 //		addProduct(new Product("Pera", new Amount(20.00), true, 20));
 //		addProduct(new Product("Hamburguesa", new Amount(30.00), true, 30));
@@ -213,72 +217,16 @@ public class Shop {
 	 * read inventory from file
 	 */
 	private void readInventory() {
-		// locate file, path and name
-		File f = new File(System.getProperty("user.dir") + File.separator + "files/inputInventory.txt");
-		
-		try {			
-			// wrap in proper classes
-			FileReader fr;
-			fr = new FileReader(f);				
-			BufferedReader br = new BufferedReader(fr);
-			
-			// read first line
-			String line = br.readLine();
-			
-			// process and read next line until end of file
-			while (line != null) {
-				// split in sections
-				String[] sections = line.split(";");
-				
-				String name = "";
-				double wholesalerPrice=0.0;
-				int stock = 0;
-				
-				// read each sections
-				for (int i = 0; i < sections.length; i++) {
-					// split data in key(0) and value(1) 
-					String[] data = sections[i].split(":");
-					
-					switch (i) {
-					case 0:
-						// format product name
-						name = data[1];
-						break;
-						
-					case 1:
-						// format price
-						wholesalerPrice = Double.parseDouble(data[1]);
-						break;
-						
-					case 2:
-						// format stock
-						stock = Integer.parseInt(data[1]);
-						break;
-						
-					default:
-						break;
-					}
-				}
-				// add product to inventory
-				addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
-				
-				// read next line
-				line = br.readLine();
-			}
-			fr.close();
-			br.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		setInventory(this.dao.getInventory());
+		System.out.println(inventory);
+	}
+	
+	public Boolean writeInventory() {
+		System.out.println(inventory);
+		return this.dao.writeInventory(inventory);
 	}
 
-	/**
+	/*
 	 * show current total cash
 	 */
 	private void showCash() {
