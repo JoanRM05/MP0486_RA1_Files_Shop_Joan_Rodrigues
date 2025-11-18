@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dao.DaoImplFile;
+import dao.DaoImplJDBC;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
@@ -27,7 +28,7 @@ public class Shop {
 //	private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
-	private DaoImplFile dao = new DaoImplFile();
+	private DaoImplJDBC dao = new DaoImplJDBC();
 	
 	final static double TAX_RATE = 1.04;
 
@@ -299,7 +300,15 @@ public class Shop {
 			System.out.println("No se ha encontrado el producto con nombre " + name);
 		}
 	}
-
+	
+	public void updateProduct(Product product) {
+		dao.updateProduct(product);
+	}
+	
+	public void deleteProduct(Product product) {
+		dao.deleteProduct(product.getId());
+	}
+	
 	/**
 	 * set a product as expired
 	 */
@@ -491,6 +500,7 @@ public class Shop {
 			return;
 		}
 		inventory.add(product);
+		dao.addProduct(product);
 		numberProducts++;
 	}
 	

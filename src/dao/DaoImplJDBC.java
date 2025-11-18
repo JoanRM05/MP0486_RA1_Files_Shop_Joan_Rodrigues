@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import model.Amount;
 import model.Employee;
 import model.Product;
 
@@ -66,14 +68,136 @@ public class DaoImplJDBC implements Dao {
 
 	@Override
 	public ArrayList<Product> getInventory() {
-		// TODO Auto-generated method stub
+		
+		String query = "select * from inventory";
+		
+		try {
+			if (connection == null || connection.isClosed()) {
+				connect();
+			}
+			
+			PreparedStatement ps = connection.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+			ArrayList<Product> products = new ArrayList<>();
+			
+			while (rs.next()) {
+				products.add(new Product(rs.getString("name"), new Amount(rs.getDouble("wholesalerPrice")), rs.getBoolean("available"), rs.getInt("stock")));
+			}
+					
+			return products;
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			disconnect();
+		}
+		
 		return null;
 	}
 
 	@Override
 	public boolean writeInventory(ArrayList<Product> products) {
-		// TODO Auto-generated method stub
+		String query = "insert into historical_inventory (id_product, name, wholesalerPrice, available, stock, created_at) values (?,?,?,?,?,?)";
+		
+		try {
+			if (connection == null || connection.isClosed()) {
+				connect();
+			}
+			
+			for (Product product : products) {
+				PreparedStatement ps = connection.prepareStatement(query);
+				ps.setInt(1, product.getId());
+				ps.setString(2, product.getName());
+				ps.setDouble(3, product.getWholesalerPrice().getValue());
+				ps.setBoolean(4, product.isAvailable());
+				ps.setInt(5, product.getStock());
+				ps.setObject(6, LocalDateTime.now());
+				
+				ps.executeUpdate();
+			}
+			
+			return true;
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			disconnect();
+		}
+		
 		return false;
+	}
+
+	@Override
+	public void addProduct(Product product) {
+		
+		String query = "insert into inventory (name, wholesalerPrice, available, stock) values (?,?,?,?)";
+		
+		
+		try {
+			if (connection == null || connection.isClosed()) {
+				connect();
+			}
+			
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, product.getName());
+			ps.setDouble(2, product.getWholesalerPrice().getValue());
+			ps.setBoolean(3, product.isAvailable());
+			ps.setInt(4, product.getStock());
+			
+			ps.executeUpdate();
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			disconnect();
+		}
+	}
+
+	@Override
+	public void updateProduct(Product product) {
+		
+		String query = "update inventory set stock=? where id=?";
+		
+		System.out.println(product.getStock());
+		
+		try {
+			if (connection == null || connection.isClosed()) {
+				connect();
+			}
+			
+			PreparedStatement ps = connection.prepareStatement(query);;
+			ps.setInt(1, product.getStock());
+			ps.setInt(2, product.getId());
+			
+			ps.executeUpdate();
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			disconnect();
+		}
+	}
+
+	@Override
+	public void deleteProduct(int productId) {
+		String query = "delete from inventory where id=?";
+		
+		try {
+			if (connection == null || connection.isClosed()) {
+				connect();
+			}
+			
+			PreparedStatement ps = connection.prepareStatement(query);;
+			ps.setInt(1, productId);
+			
+			ps.executeUpdate();
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			disconnect();
+		}
 	}
 	
 }
