@@ -134,7 +134,7 @@ public class DaoImplFile implements Dao {
 				
 				
 			}
-			StringBuilder lastLine = new StringBuilder("Total number of products:" + counterInventory);
+			StringBuilder lastLine = new StringBuilder("Total number of products:" + counterInventory + ";");
 			pw.write(lastLine.toString());
 			fw.write("\n");
 
