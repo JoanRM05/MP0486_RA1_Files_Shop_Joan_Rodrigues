@@ -87,8 +87,8 @@ public class DaoImplJDBC implements Dao {
 					
 			return products;
 			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			disconnect();
 		}
@@ -119,8 +119,8 @@ public class DaoImplJDBC implements Dao {
 			
 			return true;
 			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			disconnect();
 		}
@@ -147,8 +147,8 @@ public class DaoImplJDBC implements Dao {
 			
 			ps.executeUpdate();
 			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			disconnect();
 		}
@@ -172,8 +172,8 @@ public class DaoImplJDBC implements Dao {
 			
 			ps.executeUpdate();
 			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			disconnect();
 		}
@@ -193,8 +193,8 @@ public class DaoImplJDBC implements Dao {
 			
 			ps.executeUpdate();
 			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			disconnect();
 		}
