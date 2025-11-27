@@ -82,7 +82,7 @@ public class DaoImplJDBC implements Dao {
 			ArrayList<Product> products = new ArrayList<>();
 			
 			while (rs.next()) {
-				products.add(new Product(rs.getString("name"), new Amount(rs.getDouble("wholesalerPrice")), rs.getBoolean("available"), rs.getInt("stock")));
+				products.add(new Product(rs.getInt("id"), rs.getString("name"), new Amount(rs.getDouble("wholesalerPrice")), rs.getBoolean("available"), rs.getInt("stock")));
 			}
 					
 			return products;
@@ -131,7 +131,7 @@ public class DaoImplJDBC implements Dao {
 	@Override
 	public void addProduct(Product product) {
 		
-		String query = "insert into inventory (name, wholesalerPrice, available, stock) values (?,?,?,?)";
+		String query = "insert into inventory (id, name, wholesalerPrice, available, stock) values (?,?,?,?,?)";
 		
 		
 		try {
@@ -140,10 +140,11 @@ public class DaoImplJDBC implements Dao {
 			}
 			
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setString(1, product.getName());
-			ps.setDouble(2, product.getWholesalerPrice().getValue());
-			ps.setBoolean(3, product.isAvailable());
-			ps.setInt(4, product.getStock());
+			ps.setInt(1, product.getId());
+			ps.setString(2, product.getName());
+			ps.setDouble(3, product.getWholesalerPrice().getValue());
+			ps.setBoolean(4, product.isAvailable());
+			ps.setInt(5, product.getStock());
 			
 			ps.executeUpdate();
 			
@@ -158,8 +159,6 @@ public class DaoImplJDBC implements Dao {
 	public void updateProduct(Product product) {
 		
 		String query = "update inventory set stock=? where id=?";
-		
-		System.out.println(product.getStock());
 		
 		try {
 			if (connection == null || connection.isClosed()) {
