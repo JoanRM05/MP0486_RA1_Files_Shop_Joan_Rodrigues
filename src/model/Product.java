@@ -1,15 +1,47 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name= "inventory")
 public class Product {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	private int id;
+	
+	@Column
     private String name;
+	
+	@Column
+	private double price;
+	
+	@Transient
     private Amount publicPrice;
+	
+	@Transient
     private Amount wholesalerPrice;
+	
+	@Column
     private boolean available;
+	
+	@Column
     private int stock;
+	
+	@Transient
     private static int totalProducts;
     
+	@Transient
     public final static double EXPIRATION_RATE=0.60;
+    
+    public Product() {}
     
 	public Product(String name, Amount wholesalerPrice, boolean available, int stock) {
 		super();
@@ -26,6 +58,7 @@ public class Product {
 		super();
 		this.id = id;
 		this.name = name;
+		this.price = wholesalerPrice.getValue();
 		this.wholesalerPrice = wholesalerPrice;
 		this.publicPrice = new Amount(wholesalerPrice.getValue() * 2);
 		this.available = available;
@@ -44,13 +77,15 @@ public class Product {
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	
-
+	public double getPrice() {
+		return price;
+	}
+	
 	public Amount getPublicPrice() {
 		return publicPrice;
 	}
@@ -100,14 +135,5 @@ public class Product {
 		return "Product [name=" + name + ", publicPrice=" + publicPrice + ", wholesalerPrice=" + wholesalerPrice
 				+ ", available=" + available + ", stock=" + stock + "]";
 	}
-
-	
-	
-	
-	
-	
-
-    
-
     
 }

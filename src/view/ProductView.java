@@ -159,7 +159,13 @@ public class ProductView extends JDialog implements ActionListener{
 							JOptionPane.ERROR_MESSAGE);
 					
 				} else {
-					int id = shop.getInventory().get(shop.getInventory().size() - 1).getId()+1;
+					int id;
+					
+					if (shop.getInventory().isEmpty()) {
+					    id = 1; 
+					} else {
+					    id = shop.getInventory().get(shop.getInventory().size() - 1).getId() + 1;
+					}
 					
 					product = new Product(id, textFieldName.getText(), 
 							new Amount(Double.parseDouble(textFieldPrice.getText())) ,
