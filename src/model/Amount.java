@@ -26,7 +26,4 @@ public class Amount {
 		return df.format(value) + currency;
 	}
 	
-	
-
-	
 }

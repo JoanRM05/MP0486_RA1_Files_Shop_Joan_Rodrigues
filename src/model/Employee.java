@@ -7,7 +7,7 @@ public class Employee extends Person implements Logable{
 	private int employeeId;
 	private String password;
 	// connection using JDBC SQL
-	private Dao dao = new DaoImplJDBC();
+	private Dao dao = new DaoImplMongoDB();
 	
 //	public static final int USER = 123;
 //	public static final String PASSWORD = "test";
@@ -64,9 +64,6 @@ public class Employee extends Person implements Logable{
 //			return true;
 //		} 
 		boolean success = false;
-		
-		// connect to data
-		dao.connect();
 		
 		// get employee data
 		if(dao.getEmployee(user, password) != null) {
